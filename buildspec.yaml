@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - aws ecr get-login-password --region ap-southeast-1 | docker login --username AWS --password-stdin 975049993535.dkr.ecr.ap-southeast-1.amazonaws.com
+  build:
+    commands:
+      - docker build -t assignment .
+      - docker tag assignment:latest 975049993535.dkr.ecr.ap-southeast-1.amazonaws.com/assignment:latest
+  post_build:
+    commands:
+      - docker push 975049993535.dkr.ecr.ap-southeast-1.amazonaws.com/assignment:latest
+      - echo Writing image definitions file...
+      - printf '[{"name":"assignment","imageUri":"%s"}]' 975049993535.dkr.ecr.ap-southeast-1.amazonaws.com/assignment:latest > imagedefinitions.json
+artifacts:
+  files: imagedefinitions.json
