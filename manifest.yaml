@@ -1,19 +1,57 @@
+# manifest.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: flask-app
+
+---
+
+# Deploy Blue Environment
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: isuru-assignment
-  labels:
-    app: assignment
+  name: flask-app-blue
+  namespace: flask-app
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
-      app: assignment
+      app: flask-app
+      version: blue
   template:
     metadata:
       labels:
-        app: assignment
+        app: flask-app
+        version: blue
     spec:
       containers:
-      - name: assignment
-        image: isuru1321/assignment:v1
+      - name: flask-app
+        image: flask-app:latest
+        ports:
+        - containerPort: 5000
+
+---
+
+# Deploy Green Environment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-green
+  namespace: flask-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: flask-app
+      version: green
+  template:
+    metadata:
+      labels:
+        app: flask-app
+        version: green
+    spec:
+      containers:
+      - name: flask-app
+        image: flask-app:latest
+        ports:
+        - containerPort: 5000
