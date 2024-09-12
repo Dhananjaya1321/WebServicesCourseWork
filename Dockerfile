@@ -1,12 +1,17 @@
-FROM 975049993535.dkr.ecr.ap-southeast-1.amazonaws.com/python:3.8-slim-buster
+# Dockerfile for Python Flask App
+FROM python:3.8-slim-buster
 
 WORKDIR /app
 
+# Copy requirements and install dependencies
 COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip3 install -r requirements.txt
-
+# Copy the entire application code
 COPY . .
 
-ENTRYPOINT python app.py
-# CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
+# Expose the port the app will run on
+EXPOSE 5000
+
+# Command to run the app
+CMD ["python3", "app.py"]
