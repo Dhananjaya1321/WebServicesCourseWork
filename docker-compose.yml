@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  flask-app-blue:
+    image: my-flask-app:blue
+    container_name: flask-app-blue
+    build:
+      context: .
+    ports:
+      - "5001:5000" 
+
+  flask-app-green:
+    image: my-flask-app:green
+    container_name: flask-app-green
+    build:
+      context: .
+    ports:
+      - "5002:5000" 
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx-proxy
+    ports:
+      - "80:80"  # NGINX will route requests to blue or green
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
