@@ -1,57 +1,56 @@
-# manifest.yaml
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: flask-app
+  name: node-app
 
 ---
 
-# Deploy Blue Environment
+# Deploy Blue Environment for Node.js
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app-blue
-  namespace: flask-app
+  name: node-app-blue
+  namespace: node-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: flask-app
+      app: node-app
       version: blue
   template:
     metadata:
       labels:
-        app: flask-app
+        app: node-app
         version: blue
     spec:
       containers:
-      - name: flask-app
-        image: flask-app:latest
-        ports:
-        - containerPort: 5000
+        - name: node-app
+          image: node-app:latest
+          ports:
+            - containerPort: 5000
 
 ---
 
-# Deploy Green Environment
+# Deploy Green Environment for Node.js
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: flask-app-green
-  namespace: flask-app
+  name: node-app-green
+  namespace: node-app
 spec:
   replicas: 3
   selector:
     matchLabels:
-      app: flask-app
+      app: node-app
       version: green
   template:
     metadata:
       labels:
-        app: flask-app
+        app: node-app
         version: green
     spec:
       containers:
-      - name: flask-app
-        image: flask-app:latest
-        ports:
-        - containerPort: 5000
+        - name: node-app
+          image: node-app:latest
+          ports:
+            - containerPort: 5000

@@ -5,15 +5,15 @@ FROM node:18-alpine AS build
 WORKDIR /app/backend
 
 # Copy backend files
-COPY Crypto-backEnd/package*.json ./
+COPY crypto-backend/package*.json ./
 RUN npm install
-COPY ../../Downloads/Web-services-assignment-master/Web-services-assignment-master/Crypto-backEnd .
+COPY crypto-backend/ .
 
 # Build the frontend
 WORKDIR /app/frontend
 COPY crypto-frontend/package*.json ./
 RUN npm install
-COPY ../../Downloads/Web-services-assignment-master/Web-services-assignment-master/crypto-frontend .
+COPY crypto-frontend/ .
 RUN npm run build
 
 # Move the frontend build to the backend's public directory

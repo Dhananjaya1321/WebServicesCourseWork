@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: node-app-blue
+  labels:
+    app: node-app
+    version: blue
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: node-app
+      version: blue
+  template:
+    metadata:
+      labels:
+        app: node-app
+        version: blue
+    spec:
+      containers:
+        - name: node-app
+          image: node-app:latest
+          ports:
+            - containerPort: 5000
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5000
+            initialDelaySeconds: 5
+            periodSeconds: 10
