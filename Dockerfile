@@ -1,17 +1,36 @@
-# Dockerfile for Python Flask App
-FROM python:3.8-slim-buster
+# Build Stage
+FROM node:18-alpine AS build
 
+# Set the working directory for the backend
+WORKDIR /app/backend
+
+# Copy backend files
+COPY Crypto-backEnd/package*.json ./
+RUN npm install
+COPY ../../Downloads/Web-services-assignment-master/Web-services-assignment-master/Crypto-backEnd .
+
+# Build the frontend
+WORKDIR /app/frontend
+COPY crypto-frontend/package*.json ./
+RUN npm install
+COPY ../../Downloads/Web-services-assignment-master/Web-services-assignment-master/crypto-frontend .
+RUN npm run build
+
+# Move the frontend build to the backend's public directory
+RUN mkdir -p /app/backend/public
+RUN cp -R build/* /app/backend/public/
+
+# Production Stage
+FROM node:18-alpine AS production
+
+# Set working directory for the backend
 WORKDIR /app
 
-# Copy requirements and install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy backend files from the build stage
+COPY --from=build /app/backend /app/backend
 
-# Copy the entire application code
-COPY . .
-
-# Expose the port the app will run on
+# Expose backend port
 EXPOSE 5000
 
-# Command to run the app
-CMD ["python3", "app.py"]
+# Start the backend server (which now also serves the frontend)
+CMD ["node", "backend/bin/www"]
